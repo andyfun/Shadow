@@ -1,11 +1,14 @@
 package com.tencent.shadow.sample.host;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tencent.shadow.dynamic.host.EnterCallback;
 import com.tencent.shadow.dynamic.host.PluginManager;
@@ -58,6 +61,9 @@ public class MainActivity extends Activity {
 
         Button callServiceButton = new Button(this);
         callServiceButton.setText("调用插件Service，结果打印到Log");
+        LinearLayout.LayoutParams lpS = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lpS.topMargin = 20;
+        callServiceButton.setLayoutParams(lpS);
         callServiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +76,34 @@ public class MainActivity extends Activity {
 
         linearLayout.addView(callServiceButton);
 
+
+        Button buttonInit = new Button(this);
+        buttonInit.setText("初始化");
+        buttonInit.setOnClickListener(this::Init);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.topMargin = 20;
+        buttonInit.setLayoutParams(lp);
+        linearLayout.addView(buttonInit);
+
+
+        Button buttonLogin = new Button(this);
+        buttonLogin.setText("登录");
+        LinearLayout.LayoutParams lpLogin = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lpLogin.topMargin = 20;
+        buttonLogin.setLayoutParams(lpLogin);
+        buttonLogin.setOnClickListener(this::Login);
+        linearLayout.addView(buttonLogin);
+
         setContentView(linearLayout);
     }
+
+    private void Init(View view) {
+        Toast.makeText(this,"Init",Toast.LENGTH_SHORT).show();
+    }
+
+    private void Login(View view) {
+        Toast.makeText(this,"login",Toast.LENGTH_SHORT).show();
+    }
+
+
 }

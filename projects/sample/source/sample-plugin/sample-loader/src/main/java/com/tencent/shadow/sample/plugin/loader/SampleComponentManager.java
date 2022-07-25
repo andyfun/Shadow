@@ -48,6 +48,7 @@ public class SampleComponentManager extends ComponentManager {
      */
     @Override
     public ComponentName onBindContainerActivity(ComponentName pluginActivity) {
+        //TODO
         switch (pluginActivity.getClassName()) {
             /**
              * 这里配置对应的对应关系

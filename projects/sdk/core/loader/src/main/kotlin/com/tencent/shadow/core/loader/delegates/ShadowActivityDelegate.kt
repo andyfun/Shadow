@@ -92,6 +92,7 @@ open class ShadowActivityDelegate(private val mDI: DI) : GeneratedShadowActivity
         mBusinessName = pluginInitBundle.getString(CM_BUSINESS_NAME_KEY, "")
         val partKey = pluginInitBundle.getString(CM_PART_KEY)!!
         mPartKey = partKey
+        // 设置 application，resources 等等
         mDI.inject(this, partKey)
         mDependenciesInjected = true
 
@@ -117,11 +118,13 @@ open class ShadowActivityDelegate(private val mDI: DI) : GeneratedShadowActivity
         mHostActivityDelegator.intent.setExtrasClassLoader(mPluginClassLoader)
 
         try {
+            // 创建插件 activity
             val pluginActivity = mAppComponentFactory.instantiateActivity(
                 mPluginClassLoader,
                 pluginActivityClassName,
                 mHostActivityDelegator.intent
             )
+            // 初始化插件 activity
             initPluginActivity(pluginActivity, pluginActivityInfo)
             super.pluginActivity = pluginActivity
 
@@ -153,6 +156,7 @@ open class ShadowActivityDelegate(private val mDI: DI) : GeneratedShadowActivity
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 notifyPluginActivityPreCreated(pluginActivity, pluginSavedInstanceState)
             }
+            // 调用插件 activity onCreate
             pluginActivity.onCreate(pluginSavedInstanceState)
             mPluginActivityCreated = true
         } catch (e: Exception) {
@@ -200,6 +204,10 @@ open class ShadowActivityDelegate(private val mDI: DI) : GeneratedShadowActivity
 
     override fun onNavigateUpFromChild(arg0: Activity?): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onPictureInPictureUiStateChanged(arg0: Any?) {
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

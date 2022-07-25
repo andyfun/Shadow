@@ -35,15 +35,16 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import com.tencent.shadow.sample.plugin.app.lib.BuildConfig;
 import com.tencent.shadow.sample.plugin.app.lib.R;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCase;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 
 public class TestFileProviderActivity extends Activity {
-    private static final String TAG = "TestFileProviderActivity";
+    private static final String TAG = "TestFileProvider";
     private static final String KEY_FILE_PATH = "filePath";
 
     public static class Case extends UseCase {
@@ -83,16 +84,24 @@ public class TestFileProviderActivity extends Activity {
             @Override
             public void onClick(View v) {
                 String fileName = String.valueOf(System.currentTimeMillis());
-                String filePath = getFilesDir() + "/images/" + fileName + ".jpg";
+                String filePath = getFilesDir() + "/" + fileName + ".jpg";
                 mFile = new File(filePath);
                 if (!mFile.getParentFile().exists()) {
                     mFile.getParentFile().mkdir();
                 }
 
-                Uri contentUri;
+                Uri contentUri = null;
                 if (targetSdkVersion() >= Build.VERSION_CODES.N) {
-                    contentUri = FileProvider.getUriForFile(TestFileProviderActivity.this,
-                            BuildConfig.APPLICATION_ID + ".general_cases.fileprovider", mFile);
+
+                    try {
+                        contentUri = FileProvider.getUriForFile(TestFileProviderActivity.this,
+                                TestFileProviderActivity.this.getPackageName() + ".general_cases.fileprovider", mFile);
+
+                    }catch (Exception e){
+
+                        e.printStackTrace();
+                    }
+                    Log.e("FileProvider","----->contentrui = "+contentUri);
 //                    contentUri = Uri.parse("content://com.tencent.shadow.contentprovider.authority/com.tencent.shadow.test.plugin.general_cases.lib.gallery.fileprovider" +
 //                            "/name/data/data/com.tencent.shadow.test.hostapp/files/images/1548417832706.jpg");
                 } else {
@@ -115,6 +124,7 @@ public class TestFileProviderActivity extends Activity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         String filePath = savedInstanceState.getString(KEY_FILE_PATH);
+        Log.e("file",""+filePath);
         if (!TextUtils.isEmpty(filePath)) {
             mFile = new File(filePath);
         }
@@ -163,6 +173,7 @@ public class TestFileProviderActivity extends Activity {
 
                 Bitmap bitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath(), bmOptions);
                 mImageView.setImageBitmap(bitmap);
+
                 return false;
             }
         });

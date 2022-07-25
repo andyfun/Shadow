@@ -146,6 +146,7 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
         }
         Boolean isCall = (Boolean) map.get(partKey);
         if (isCall == null || !isCall) {
+            //// 先调用 Application onCreate 方法
             mPluginLoader.callApplicationOnCreate(partKey);
         }
     }

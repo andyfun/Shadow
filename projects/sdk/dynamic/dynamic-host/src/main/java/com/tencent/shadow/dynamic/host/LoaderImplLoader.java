@@ -36,17 +36,19 @@ final class LoaderImplLoader extends ImplLoader {
             "com.tencent.shadow.dynamic.host",
             "com.tencent.shadow.core.common"
     };
-
+    // 创建 PluginLoaderImpl 的工厂类
     private final static String sLoaderFactoryImplClassName
             = "com.tencent.shadow.dynamic.loader.impl.LoaderFactoryImpl";
-
+    // 动态创建 PluginLoaderImpl
     PluginLoaderImpl load(InstalledApk installedApk, String uuid, Context appContext) throws Exception {
+        // 创建插件 ClassLoader
         ApkClassLoader pluginLoaderClassLoader = new ApkClassLoader(
                 installedApk,
                 LoaderImplLoader.class.getClassLoader(),
                 loadWhiteList(installedApk),
                 1
         );
+        // 获取插件中的 工厂类
         LoaderFactory loaderFactory = pluginLoaderClassLoader.getInterface(
                 LoaderFactory.class,
                 sLoaderFactoryImplClassName

@@ -49,7 +49,10 @@ public final class DynamicPluginManager implements PluginManager {
         if (mLogger.isInfoEnabled()) {
             mLogger.info("enter fromId:" + fromId + " callback:" + callback);
         }
+        // 加载 mManagerImpl 实现，这里涉及到了框架的自身动态化，在后面会讲到，这里只要知道，mManagerImpl
+        // 最终是 SamplePluginManager 实例即可
         updateManagerImpl(context);
+        // mManagerImpl 是 SamplePluginManager 实例，调用其实现
         mManagerImpl.enter(context, fromId, bundle, callback);
         mUpdater.update();
     }

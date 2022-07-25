@@ -113,6 +113,7 @@ public class SamplePluginManager extends FastPluginManager {
 
         if (callback != null) {
             final View view = LayoutInflater.from(mCurrentContext).inflate(R.layout.activity_load_plugin, null);
+           //创建Loading view
             callback.onShowLoadingView(view);
         }
 
@@ -120,13 +121,14 @@ public class SamplePluginManager extends FastPluginManager {
             @Override
             public void run() {
                 try {
+                    // 加载插件
                     InstalledPlugin installedPlugin = installPlugin(pluginZipPath, null, true);
 
                     loadPlugin(installedPlugin.UUID, PART_KEY_PLUGIN_BASE);
                     loadPlugin(installedPlugin.UUID, PART_KEY_PLUGIN_MAIN_APP);
                     callApplicationOnCreate(PART_KEY_PLUGIN_BASE);
                     callApplicationOnCreate(PART_KEY_PLUGIN_MAIN_APP);
-
+                    // 创建插件 Intent
                     Intent pluginIntent = new Intent();
                     pluginIntent.setClassName(
                             context.getPackageName(),
@@ -135,8 +137,10 @@ public class SamplePluginManager extends FastPluginManager {
                     if (extras != null) {
                         pluginIntent.replaceExtras(extras);
                     }
+                    //转换为主宿主intent
                     Intent intent = mPluginLoader.convertActivityIntent(pluginIntent);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    // 启动插件 Activity
                     mPluginLoader.startActivityInPluginProcess(intent);
                 } catch (Exception e) {
                     throw new RuntimeException(e);

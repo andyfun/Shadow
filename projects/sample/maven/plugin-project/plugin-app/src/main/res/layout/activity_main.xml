@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <TextView
@@ -10,4 +11,20 @@
         android:layout_height="wrap_content"
         android:text="这是插件" />
 
-</FrameLayout>
+    <Button
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/bt_init"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="init"
+
+        />
+    <Button
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/bt_login"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="login"
+
+        />
+</LinearLayout>

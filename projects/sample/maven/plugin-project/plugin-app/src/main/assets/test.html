@@ -1,0 +1,81 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style type="text/css" class="div2">
+			div{
+				width: 200px;
+				height: 200px;
+				line-height: 30px;
+				text-align: center;
+				margin: 0 auto;
+			}
+			.div1{
+				background: rgba(220, 38, 38, 1);
+			}
+			.div2 {
+				background: rgba(220, 38, 38, 0.0);
+			}
+			.img{
+			  width: 200px;
+				height: 200px;
+			}
+
+    </style>
+
+</head>
+<body>
+
+<div>
+    <h4>nnnnnnnnnn</h4>
+    <img src="mtoome091000018.jpg" class="img">
+</div>
+<div>
+    <button onclick="closePage()">关闭</button>
+    <button onclick="pay()"> 支付</button>
+</div>
+<div>
+    <button onclick="test()">获取数据</button>
+</div>
+<div>
+    <button onclick="shareTest()">分享</button>
+</div>
+<div>
+    <button onclick="testevent()">事件模拟</button>
+</div>
+<div>
+    <textarea style="width:300px;height:500px"  id="dataInfo">
+</textarea>
+</div>
+<script>
+       function pay(){
+           athena_closeBrowser();
+       }
+       function closePage(){
+           athena_closeBrowser();
+       }
+       function test(){
+         console.log("test>>>>>>");
+         athena_getSDKData(function(data){
+           console.log(">>>>>>>>"+JSON.stringify(data));
+           document.getElementById('dataInfo').textContent = JSON.stringify(data);
+         });
+       }
+       function testevent(){
+        var data1 = {'key1':"value1",'key2':"value2"}
+        athena_log(JSON.stringify(data1));
+       }
+
+       function shareTest(){
+            var shareJson = {'title':"分享测试",'text':"content",'targetUrl':"http://www.baidu.com",'shareType':1,'platName':3};
+            athena_share(JSON.stringify(shareJson),function(data){
+                   console.log(">>>>>>>>"+JSON.stringify(data));
+                    document.getElementById('dataInfo').textContent = JSON.stringify(data);
+            });
+       }
+
+
+</script>
+
+</body>
+</html>

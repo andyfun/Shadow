@@ -5,7 +5,7 @@ android {
     compileSdkVersion 30
     defaultConfig {
         applicationId "com.tencent.shadow.sample.plugin"
-        minSdkVersion 16
+        minSdkVersion 18
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -28,12 +28,26 @@ android {
             applicationId "com.tencent.shadow.sample.host"
         }
     }
+    // 将插件的资源ID分区改为和宿主0x7F不同的值
+    aaptOptions {
+        additionalParameters "--package-id", "0x7E", "--allow-reserved-package-id"
+    }
 }
-
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 dependencies {
     //Shadow Transform后业务代码会有一部分实际引用runtime中的类
     //如果不以compileOnly方式依赖，会导致其他Transform或者Proguard找不到这些类
     pluginCompileOnly "com.tencent.shadow.core:runtime:$shadow_version"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation(name: 'GiantBase-release', ext: 'aar')
+    implementation(name: 'GiantCoverClass-release',ext:'aar')
+    implementation(name: 'DCPlugin-release',ext:'aar')
+    implementation "com.android.support:support-core-utils:28.0.0"
+
 }
 
 //这段buildscript配置的dependencies是为了apply plugin: 'com.tencent.shadow.plugin'能找到实现
@@ -74,7 +88,7 @@ shadow {
                         businessName = 'sample-plugin'//businessName相同的插件，context获取的Dir是相同的。businessName留空，表示和宿主相同业务，直接使用宿主的Dir。
                         partKey = 'sample-plugin'
                         buildTask = 'assemblePluginDebug'
-                        apkName = 'plugin-app-plugin-debug.apk'
+                     //   apkName = 'plugin-app-plugin-debug.apk'
                         apkPath = 'plugin-app/build/outputs/apk/plugin/debug/plugin-app-plugin-debug.apk'
                     }
                 }
@@ -88,7 +102,7 @@ shadow {
                         businessName = 'demo'
                         partKey = 'sample-plugin'
                         buildTask = 'assemblePluginRelease'
-                        apkName = 'plugin-app-plugin-release.apk'
+                      //  apkName = 'plugin-app-plugin-release.apk'
                         apkPath = 'plugin-app/build/outputs/apk/plugin/release/plugin-app-plugin-release.apk'
                     }
                 }

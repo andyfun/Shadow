@@ -19,6 +19,14 @@ import java.util.concurrent.Executors;
 
 
 public class SamplePluginManager extends FastPluginManager {
+    public static final String KEY_PLUGIN_ZIP_PATH = "pluginZipPath";
+    public static final String KEY_ACTIVITY_CLASSNAME = "KEY_ACTIVITY_CLASSNAME";
+    public static final String KEY_EXTRAS = "KEY_EXTRAS";
+    public static final String KEY_PLUGIN_PART_KEY = "KEY_PLUGIN_PART_KEY";
+    public static final String PART_KEY_PLUGIN_MAIN_APP = "sample-plugin-app";
+    public static final String PART_KEY_PLUGIN_ANOTHER_APP = "sample-plugin-app2";
+    //TODO 修改
+    public static final String PART_KEY_PLUGIN_BASE = "sample-plugin";
 
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -41,7 +49,8 @@ public class SamplePluginManager extends FastPluginManager {
      * @return 宿主中注册的PluginProcessService实现的类名
      */
     @Override
-    protected String getPluginProcessServiceName() {
+    protected String getPluginProcessServiceName(String partKey) {
+
         return "com.tencent.shadow.sample.introduce_shadow_lib.MainPluginProcessService";
     }
 
@@ -77,8 +86,14 @@ public class SamplePluginManager extends FastPluginManager {
             @Override
             public void run() {
                 try {
-                    InstalledPlugin installedPlugin
-                            = installPlugin(pluginZipPath, null, true);//这个调用是阻塞的
+                    // 加载插件
+                    InstalledPlugin installedPlugin = installPlugin(pluginZipPath, null, true);
+
+                    loadPlugin(installedPlugin.UUID, PART_KEY_PLUGIN_BASE);
+//                    loadPlugin(installedPlugin.UUID, PART_KEY_PLUGIN_MAIN_APP);
+                    callApplicationOnCreate(PART_KEY_PLUGIN_BASE);
+                    callApplicationOnCreate(PART_KEY_PLUGIN_MAIN_APP);
+                    // 创建插件 Intent
                     Intent pluginIntent = new Intent();
                     pluginIntent.setClassName(
                             context.getPackageName(),
@@ -87,8 +102,11 @@ public class SamplePluginManager extends FastPluginManager {
                     if (extras != null) {
                         pluginIntent.replaceExtras(extras);
                     }
-
-                    startPluginActivity(context, installedPlugin, partKey, pluginIntent);
+                    //转换为主宿主intent
+                    Intent intent = mPluginLoader.convertActivityIntent(pluginIntent);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    // 启动插件 Activity
+                    mPluginLoader.startActivityInPluginProcess(intent);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
